@@ -51,7 +51,7 @@ Port 9090 is restricted by a Kubernetes `NetworkPolicy` — only Prometheus insi
 
 Every PR and push to `main` runs through:
 
-```
+```text
 pre-commit hooks → lint → SAST → SCA → unit tests → docker build → trivy image scan → SBOM → integration tests → push to GHCR
 ```
 
@@ -77,7 +77,7 @@ This project is governed by a [constitution](.specify/memory/constitution.md) wi
 
 Built using [spec-kit](https://github.com/github/spec-kit) — a Spec-Driven Development workflow where specification and architecture are defined before any code is written.
 
-```
+```text
 spec → clarify → plan → tasks → implement
 ```
 
