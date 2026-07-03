@@ -32,6 +32,7 @@ A complete DevSecOps platform from scratch:
 | SAST | Semgrep | Static analysis across the codebase |
 | Dockerfile linting | hadolint | Dockerfile best practices |
 | SDD workflow | spec-kit | Spec-Driven Development |
+| Observability | Prometheus + Loki + Tempo + Grafana | Metrics, logs, traces, dashboards *(Phase 2)* |
 
 ## The app: Platform Info API
 
