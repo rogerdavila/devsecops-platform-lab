@@ -37,3 +37,4 @@ Constitution is ratified (v1.0.0). Spec written for Platform Info API. Next: sur
 - Phase 3: Istio service mesh
 - Phase 3: Backstage developer portal
 - Phase 3: LocalStack / cloud simulator for AWS service integration tests
+- Phase 4: Agentic AI security triage — an AI agent that consumes the artifacts the pipeline already produces (Trivy reports, SBOM, Semgrep findings) and summarizes/prioritizes them. Depends on Phase 1-3 being stable first (needs real pipeline output to read). Raised 2026-07-05.
