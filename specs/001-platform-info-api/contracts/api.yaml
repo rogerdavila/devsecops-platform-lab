@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: Platform Info API
+  version: 0.1.0
+  description: >-
+    Two-port service contract. Paths under /health and /ready are served on the public port
+    (8080). Paths under /info and /metrics are served on the internal-only port (9090) and are
+    rejected for any caller outside the trusted internal network (FR-006, defense-in-depth).
+servers:
+  - url: http://public:8080
+    description: Public port — health/readiness only
+  - url: http://internal:9090
+    description: Internal-only port — metadata/metrics only, blocked externally
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      description: Reports whether the process is alive. Never reflects dependency health (FR-001).
+      responses:
+        "200":
+          description: Process is alive
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /ready:
+    get:
+      summary: Readiness probe
+      description: >-
+        Reports whether the service can accept traffic. Reflects the internal startup check
+        (FR-003); flips to not-ready immediately on SIGTERM.
+      responses:
+        "200":
+          description: Service is ready to accept traffic
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadinessStatus"
+        "503":
+          description: Service is not ready (startup incomplete, or draining after SIGTERM)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadinessStatus"
+  /info:
+    get:
+      summary: Service metadata
+      description: Internal-only. Rejected for callers outside the trusted internal network.
+      responses:
+        "200":
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceMetadata"
+        "403":
+          description: Caller is not within the trusted internal network (application-level check, FR-006)
+  /metrics:
+    get:
+      summary: Prometheus-format operational metrics
+      description: Internal-only. Rejected for callers outside the trusted internal network.
+      responses:
+        "200":
+          description: Metrics in Prometheus text exposition format
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: Caller is not within the trusted internal network (application-level check, FR-006)
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [alive, checked_at]
+      properties:
+        alive:
+          type: boolean
+        checked_at:
+          type: string
+          format: date-time
+    ReadinessStatus:
+      type: object
+      required: [ready, checked_at]
+      properties:
+        ready:
+          type: boolean
+        checked_at:
+          type: string
+          format: date-time
+    ServiceMetadata:
+      type: object
+      required: [version, environment, build_id]
+      properties:
+        version:
+          type: string
+          example: "0.1.0"
+        environment:
+          type: string
+          enum: [dev, staging, prod]
+        build_id:
+          type: string
+          example: "a1b2c3d"
