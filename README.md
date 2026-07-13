@@ -64,6 +64,30 @@ pre-commit hooks → lint → SAST → SCA → unit tests → docker build → t
 
 **Pre-commit hooks** (run locally before every push): `black`, `ruff`, `bandit`, `detect-secrets`, `hadolint`
 
+## Developer setup
+
+**Prerequisites**: Python 3.13, pip, Docker (for hadolint hook and local container testing).
+
+```
+# 1. Install pre-commit
+pip install pre-commit
+
+# 2. Register hooks in this repo (run once after cloning)
+pre-commit install
+
+# 3. Install Python dev dependencies
+pip install -r app/requirements-dev.txt
+
+# 4. Run all hooks manually to verify setup
+pre-commit run --all-files
+
+# 5. Run tests (from the app/ directory)
+cd app
+pytest
+```
+
+Note: the `hadolint-docker` pre-commit hook requires Docker to be running. If Docker is not available, the hook will fail on Dockerfile linting only — all other hooks run independently.
+
 ## Project principles
 
 This project is governed by a [constitution](.specify/memory/constitution.md) with 8 non-negotiable principles, including:

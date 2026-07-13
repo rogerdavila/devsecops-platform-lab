@@ -3,7 +3,6 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        language_version: python3.13
         files: ^app/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -27,7 +26,7 @@ repos:
         args: [--baseline, .secrets.baseline]
 
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.1
+    rev: v2.12.0
     hooks:
-      - id: hadolint-docker
+      - id: hadolint
         files: ^app/Dockerfile$
