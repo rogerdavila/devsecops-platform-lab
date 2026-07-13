@@ -8,7 +8,9 @@ from src.core.metrics import REGISTRY, process_uptime_seconds
 
 @pytest.mark.asyncio
 async def test_http_requests_total_appears_after_request():
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
         await client.get("/info")
     output = generate_latest(REGISTRY).decode("utf-8")
     assert "http_requests_total" in output
@@ -16,7 +18,9 @@ async def test_http_requests_total_appears_after_request():
 
 @pytest.mark.asyncio
 async def test_http_request_duration_appears_after_request():
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
         await client.get("/info")
     output = generate_latest(REGISTRY).decode("utf-8")
     assert "http_request_duration_seconds" in output
@@ -38,7 +42,9 @@ async def test_http_requests_errors_total_registered():
     output = generate_latest(REGISTRY).decode("utf-8")
     # Counter with labels only appears after first observation;
     # trigger a request to ensure the family is registered in output.
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
         await client.get("/info")
     output = generate_latest(REGISTRY).decode("utf-8")
     assert "http_requests_errors_total" in output or "http_requests_total" in output

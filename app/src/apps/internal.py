@@ -38,7 +38,11 @@ async def _record_metrics(request: Request, call_next: object) -> object:
     return response
 
 
-@app.get("/info", response_model=ServiceMetadata, dependencies=[Depends(require_internal_network)])
+@app.get(
+    "/info",
+    response_model=ServiceMetadata,
+    dependencies=[Depends(require_internal_network)],
+)
 async def info() -> ServiceMetadata:
     return ServiceMetadata(
         version=settings.version,

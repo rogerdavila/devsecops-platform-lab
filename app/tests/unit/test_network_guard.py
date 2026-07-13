@@ -1,9 +1,7 @@
-import pytest
-from fastapi import HTTPException
 from starlette.testclient import TestClient
 
-from src.core.network_guard import is_private_ip, require_internal_network
 from src.apps.internal import app
+from src.core.network_guard import is_private_ip
 
 
 def test_rfc1918_10_block_allowed():
