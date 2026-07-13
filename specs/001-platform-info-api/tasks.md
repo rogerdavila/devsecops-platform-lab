@@ -54,13 +54,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Create `app/src/apps/public.py` — FastAPI app with `GET /health` returning `HealthStatus(alive=True, checked_at=now)` always 200; `GET /ready` returning `ReadinessStatus` with 200 when lifecycle is started and not draining, 503 otherwise
+- [x] T011 [US1] Create `app/src/apps/public.py` — FastAPI app with `GET /health` returning `HealthStatus(alive=True, checked_at=now)` always 200; `GET /ready` returning `ReadinessStatus` with 200 when lifecycle is started and not draining, 503 otherwise
 
 ### Tests for User Story 1
 
-- [ ] T012 [P] [US1] Write unit tests for `/health` endpoint in `app/tests/unit/test_health.py` — always returns 200 with `alive=True` and `checked_at` in ISO 8601 format regardless of lifecycle state
-- [ ] T013 [P] [US1] Write unit tests for `/ready` endpoint and lifecycle state in `app/tests/unit/test_ready.py` — 503 before startup, 200 after startup, 503 immediately on SIGTERM drain, 200 during drain on `/health`
-- [ ] T014 [US1] Write integration tests for US1 in `app/tests/integration/test_health_ready.py` — starts service process, validates `/health` 200 JSON schema matches `contracts/api.yaml`, validates `/ready` 200/503 transitions (depends on T011, T012, T013)
+- [x] T012 [P] [US1] Write unit tests for `/health` endpoint in `app/tests/unit/test_health.py` — always returns 200 with `alive=True` and `checked_at` in ISO 8601 format regardless of lifecycle state
+- [x] T013 [P] [US1] Write unit tests for `/ready` endpoint and lifecycle state in `app/tests/unit/test_ready.py` — 503 before startup, 200 after startup, 503 immediately on SIGTERM drain, 200 during drain on `/health`
+- [x] T014 [US1] Write integration tests for US1 in `app/tests/integration/test_health_ready.py` — starts service process, validates `/health` 200 JSON schema matches `contracts/api.yaml`, validates `/ready` 200/503 transitions (depends on T011, T012, T013)
 
 **Checkpoint**: User Story 1 complete. Orchestrator can determine health/readiness. SC-001 verifiable (< 1s response).
 
