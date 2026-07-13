@@ -20,10 +20,10 @@
 
 **Purpose**: Project directory structure, dependency manifest, developer tooling.
 
-- [ ] T001 Create app/ directory tree: `app/src/apps/`, `app/src/core/`, `app/src/models/`, `app/tests/unit/`, `app/tests/integration/` with `__init__.py` stubs
-- [ ] T002 Create `app/requirements.txt` with pinned versions: fastapi, uvicorn[standard], prometheus-client, pydantic-settings, httpx, pytest, pytest-cov, pytest-asyncio
-- [ ] T003 [P] Create `.pre-commit-config.yaml` with hooks: black (formatter), ruff (linter), bandit (SAST), detect-secrets (secret scanning), hadolint (Dockerfile linter)
-- [ ] T004 [P] Initialize detect-secrets baseline at `.secrets.baseline` via `detect-secrets scan > .secrets.baseline`
+- [x] T001 Create app/ directory tree: `app/src/apps/`, `app/src/core/`, `app/src/models/`, `app/tests/unit/`, `app/tests/integration/` with `__init__.py` stubs
+- [x] T002 Create `app/requirements.txt` with pinned versions: fastapi, uvicorn[standard], prometheus-client, pydantic-settings, httpx, pytest, pytest-cov, pytest-asyncio
+- [x] T003 [P] Create `.pre-commit-config.yaml` with hooks: black (formatter), ruff (linter), bandit (SAST), detect-secrets (secret scanning), hadolint (Dockerfile linter)
+- [x] T004 [P] Initialize detect-secrets baseline at `.secrets.baseline` via `detect-secrets scan > .secrets.baseline`
 
 **Checkpoint**: Project skeleton ready. Pre-commit hooks installable via `pre-commit install`.
 
@@ -35,12 +35,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Create `app/src/core/config.py` — Pydantic `BaseSettings` reading `VERSION`, `ENVIRONMENT` (enum: dev/staging/prod), `BUILD_ID` from environment variables; defaults to dev/unknown for local runs
-- [ ] T006 Create `app/src/core/lifecycle.py` — in-memory startup state (`_started: bool`, `_draining: bool`); `startup_complete()` sets started; SIGTERM handler sets draining immediately (readiness flips to False, liveness unaffected) per clarified edge case (2026-07-05)
-- [ ] T007 Create `app/src/core/network_guard.py` — FastAPI dependency that reads client host from request, validates it falls within RFC1918 private ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), raises `HTTPException(403)` for any non-private source IP
-- [ ] T008 Create `app/src/models/health.py` — Pydantic response models matching `contracts/api.yaml`: `HealthStatus(alive: bool, checked_at: datetime)`, `ReadinessStatus(ready: bool, checked_at: datetime)`, `ServiceMetadata(version: str, environment: str, build_id: str)`
-- [ ] T009 Create `app/src/main.py` — entrypoint using `asyncio.gather` to run two concurrent `uvicorn.Server` instances: public app on `:8080`, internal app on `:9090`; wires SIGTERM to lifecycle handler
-- [ ] T010 Create `app/Dockerfile` — base `python:3.13-slim`, creates non-root user `appuser`, copies `requirements.txt` + `app/src/`, installs deps, `EXPOSE 8080 9090`, `USER appuser`, `CMD ["python", "src/main.py"]`
+- [x] T005 Create `app/src/core/config.py` — Pydantic `BaseSettings` reading `VERSION`, `ENVIRONMENT` (enum: dev/staging/prod), `BUILD_ID` from environment variables; defaults to dev/unknown for local runs
+- [x] T006 Create `app/src/core/lifecycle.py` — in-memory startup state (`_started: bool`, `_draining: bool`); `startup_complete()` sets started; SIGTERM handler sets draining immediately (readiness flips to False, liveness unaffected) per clarified edge case (2026-07-05)
+- [x] T007 Create `app/src/core/network_guard.py` — FastAPI dependency that reads client host from request, validates it falls within RFC1918 private ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), raises `HTTPException(403)` for any non-private source IP
+- [x] T008 Create `app/src/models/health.py` — Pydantic response models matching `contracts/api.yaml`: `HealthStatus(alive: bool, checked_at: datetime)`, `ReadinessStatus(ready: bool, checked_at: datetime)`, `ServiceMetadata(version: str, environment: str, build_id: str)`
+- [x] T009 Create `app/src/main.py` — entrypoint using `asyncio.gather` to run two concurrent `uvicorn.Server` instances: public app on `:8080`, internal app on `:9090`; wires SIGTERM to lifecycle handler
+- [x] T010 Create `app/Dockerfile` — base `python:3.13-slim`, creates non-root user `appuser`, copies `requirements.txt` + `app/src/`, installs deps, `EXPOSE 8080 9090`, `USER appuser`, `CMD ["python", "src/main.py"]`
 
 **Checkpoint**: Foundation complete. Core config, lifecycle, network guard, models, entrypoint, and container image build target all in place.
 
