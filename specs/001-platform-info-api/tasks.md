@@ -94,12 +94,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] Add `GET /metrics` route and Prometheus instrumentation middleware to `app/src/apps/internal.py` — register four metric families per `data-model.md` (Counter `http_requests_total{method,path,status}`, Histogram `http_request_duration_seconds{method,path}`, Counter `http_requests_errors_total{method,path,status}`, Gauge `process_uptime_seconds`); serve `prometheus_client.generate_latest()` as `text/plain`; protected by existing `network_guard` middleware (depends on T015)
+- [x] T019 [US3] Add `GET /metrics` route and Prometheus instrumentation middleware to `app/src/apps/internal.py` — register four metric families per `data-model.md` (Counter `http_requests_total{method,path,status}`, Histogram `http_request_duration_seconds{method,path}`, Counter `http_requests_errors_total{method,path,status}`, Gauge `process_uptime_seconds`); serve `prometheus_client.generate_latest()` as `text/plain`; protected by existing `network_guard` middleware (depends on T015)
 
 ### Tests for User Story 3
 
-- [ ] T020 [P] [US3] Write unit tests for metrics registration in `app/tests/unit/test_metrics.py` — all four metric family names present in registry; after a request, `http_requests_total` count increments; error requests increment `http_requests_errors_total`; `process_uptime_seconds` is non-negative
-- [ ] T021 [US3] Write integration tests for US3 in `app/tests/integration/test_metrics.py` — starts service, scrapes `/metrics`, parses Prometheus text format, validates all four metric names present; sends a request first to ensure counters are non-zero; validates `/metrics` returns 403 when caller IP is non-RFC1918 (depends on T019, T020)
+- [x] T020 [P] [US3] Write unit tests for metrics registration in `app/tests/unit/test_metrics.py` — all four metric family names present in registry; after a request, `http_requests_total` count increments; error requests increment `http_requests_errors_total`; `process_uptime_seconds` is non-negative
+- [x] T021 [US3] Write integration tests for US3 in `app/tests/integration/test_metrics.py` — starts service, scrapes `/metrics`, parses Prometheus text format, validates all four metric names present; sends a request first to ensure counters are non-zero; validates `/metrics` returns 403 when caller IP is non-RFC1918 (depends on T019, T020)
 
 **Checkpoint**: All three user stories complete. Full feature functional and testable end-to-end.
 
