@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: platform-info-api
+spec:
+  podSelector:
+    matchLabels:
+      app: platform-info-api
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow all ingress to public port :8080 (health/ready probes and external traffic)
+    - ports:
+        - port: 8080
+          protocol: TCP
+
+    # Allow ingress to internal port :9090 only from the monitoring namespace
+    # (Prometheus scrape). All other sources are blocked at network layer (FR-006).
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9090
+          protocol: TCP

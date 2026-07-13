@@ -109,8 +109,8 @@
 
 **Purpose**: GitHub Actions pipeline enforcing all Quality Gates from the constitution before any image reaches the registry.
 
-- [ ] T022 Create `.github/workflows/ci.yml` — sequential jobs: (1) lint-format: `black --check` + `ruff check`; (2) sast: Semgrep with `p/python`; (3) sca: `pip-audit` fail on HIGH+; (4) test: `pytest --cov=app/src --cov-fail-under=80`; (5) build: `docker build`; (6) scan: Trivy image scan fail on CRITICAL; (7) sbom: Trivy `--format cyclonedx` output to `sbom.json`; (8) integration: run container + hit `/health`, `/ready`, `/info`, `/metrics`; (9) push: GHCR push only on `main` branch after all gates pass
-- [ ] T023 [P] Create `.hadolint.yaml` at repo root with project-specific ignore rules if needed (e.g., `DL3008` for apt pin — document rationale inline per Principle VI)
+- [x] T022 Create `.github/workflows/ci.yml` — sequential jobs: (1) lint-format: `black --check` + `ruff check`; (2) sast: Semgrep with `p/python`; (3) sca: `pip-audit` fail on HIGH+; (4) test: `pytest --cov=app/src --cov-fail-under=80`; (5) build: `docker build`; (6) scan: Trivy image scan fail on CRITICAL; (7) sbom: Trivy `--format cyclonedx` output to `sbom.json`; (8) integration: run container + hit `/health`, `/ready`, `/info`, `/metrics`; (9) push: GHCR push only on `main` branch after all gates pass
+- [x] T023 [P] Create `.hadolint.yaml` at repo root with project-specific ignore rules if needed (e.g., `DL3008` for apt pin — document rationale inline per Principle VI)
 
 **Checkpoint**: CI pipeline enforces all constitution Quality Gates. No image reaches GHCR without passing every gate.
 
@@ -120,12 +120,12 @@
 
 **Purpose**: Kubernetes manifests enabling ArgoCD to deploy the service to the k3d cluster. Feature is not complete until deployed (Constitution Principle III).
 
-- [ ] T024 Create `k8s/base/deployment.yaml` — Deployment with `livenessProbe` HTTP GET `/health` on `:8080` (initialDelaySeconds: 5, periodSeconds: 10), `readinessProbe` HTTP GET `/ready` on `:8080` (initialDelaySeconds: 5, periodSeconds: 5, failureThreshold: 3); `env` sourcing `VERSION`, `ENVIRONMENT`, `BUILD_ID` from ConfigMap or Deployment env block; image tag placeholder for Kustomize overlay
-- [ ] T025 [P] Create `k8s/base/service.yaml` — two `ClusterIP` Services: `platform-info-public` on port 8080, `platform-info-internal` on port 9090 (internal ClusterIP only, no external exposure)
-- [ ] T026 [P] Create `k8s/base/networkpolicy.yaml` — allow all ingress to `:8080`; allow ingress to `:9090` only from pods in `monitoring` namespace (Prometheus scrape); deny all other ingress to `:9090` (FR-006 network layer)
-- [ ] T027 Create `k8s/base/kustomization.yaml` — lists resources: `deployment.yaml`, `service.yaml`, `networkpolicy.yaml`
-- [ ] T028 Create `k8s/overlays/local/kustomization.yaml` — Kustomize overlay for k3d; sets image to local registry (`k3d-registry.localhost:5000/platform-info-api:latest`) and sets `ENVIRONMENT=dev`
-- [ ] T029 Create `k8s/argocd/platform-info-app.yaml` — ArgoCD `Application` manifest pointing to `k8s/overlays/local/`, sync policy `automated` with `selfHeal: true`, targeting the local k3d cluster
+- [x] T024 Create `k8s/base/deployment.yaml` — Deployment with `livenessProbe` HTTP GET `/health` on `:8080` (initialDelaySeconds: 5, periodSeconds: 10), `readinessProbe` HTTP GET `/ready` on `:8080` (initialDelaySeconds: 5, periodSeconds: 5, failureThreshold: 3); `env` sourcing `VERSION`, `ENVIRONMENT`, `BUILD_ID` from ConfigMap or Deployment env block; image tag placeholder for Kustomize overlay
+- [x] T025 [P] Create `k8s/base/service.yaml` — two `ClusterIP` Services: `platform-info-public` on port 8080, `platform-info-internal` on port 9090 (internal ClusterIP only, no external exposure)
+- [x] T026 [P] Create `k8s/base/networkpolicy.yaml` — allow all ingress to `:8080`; allow ingress to `:9090` only from pods in `monitoring` namespace (Prometheus scrape); deny all other ingress to `:9090` (FR-006 network layer)
+- [x] T027 Create `k8s/base/kustomization.yaml` — lists resources: `deployment.yaml`, `service.yaml`, `networkpolicy.yaml`
+- [x] T028 Create `k8s/overlays/local/kustomization.yaml` — Kustomize overlay for k3d; sets image to local registry (`k3d-registry.localhost:5000/platform-info-api:latest`) and sets `ENVIRONMENT=dev`
+- [x] T029 Create `k8s/argocd/platform-info-app.yaml` — ArgoCD `Application` manifest pointing to `k8s/overlays/local/`, sync policy `automated` with `selfHeal: true`, targeting the local k3d cluster
 
 **Checkpoint**: Cluster state managed by ArgoCD. Any commit to `k8s/` triggers reconciliation.
 

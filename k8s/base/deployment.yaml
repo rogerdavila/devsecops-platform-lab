@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-info-api
+  labels:
+    app: platform-info-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: platform-info-api
+  template:
+    metadata:
+      labels:
+        app: platform-info-api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+      containers:
+        - name: api
+          image: ghcr.io/rogerdavila/platform-info-api:latest
+          ports:
+            - name: public
+              containerPort: 8080
+              protocol: TCP
+            - name: internal
+              containerPort: 9090
+              protocol: TCP
+          env:
+            - name: VERSION
+              value: "0.1.0"
+            - name: ENVIRONMENT
+              value: "dev"
+            - name: BUILD_ID
+              value: "unknown"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: public
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: public
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      terminationGracePeriodSeconds: 30

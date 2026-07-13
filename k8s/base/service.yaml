@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-info-public
+  labels:
+    app: platform-info-api
+    port: public
+spec:
+  type: ClusterIP
+  selector:
+    app: platform-info-api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: public
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-info-internal
+  labels:
+    app: platform-info-api
+    port: internal
+spec:
+  type: ClusterIP
+  selector:
+    app: platform-info-api
+  ports:
+    - name: http
+      port: 9090
+      targetPort: internal
+      protocol: TCP
