@@ -1,0 +1,5 @@
+failure-threshold: warning
+ignore:
+  # DL3013: pip install without version pins — we use requirements.txt with ranges,
+  # not inline package names, so this rule does not apply to our Dockerfile.
+  - DL3013
