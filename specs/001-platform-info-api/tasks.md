@@ -74,13 +74,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Create `app/src/apps/internal.py` — FastAPI app with `GET /info` using `network_guard` as FastAPI dependency, returns `ServiceMetadata` from `config`; applies `network_guard` at app middleware level so all routes on port 9090 are protected
+- [x] T015 [US2] Create `app/src/apps/internal.py` — FastAPI app with `GET /info` using `network_guard` as FastAPI dependency, returns `ServiceMetadata` from `config`; applies `network_guard` at app middleware level so all routes on port 9090 are protected
 
 ### Tests for User Story 2
 
-- [ ] T016 [P] [US2] Write unit tests for `network_guard.py` in `app/tests/unit/test_network_guard.py` — RFC1918 source IPs (10.x, 172.16.x, 192.168.x) are allowed; public IPs (1.2.3.4, 8.8.8.8) raise 403; edge cases: loopback 127.0.0.1 allowed
-- [ ] T017 [P] [US2] Write unit tests for `/info` endpoint in `app/tests/unit/test_info.py` — returns 200 with correct `version`/`environment`/`build_id` from config; non-internal caller receives 403
-- [ ] T018 [US2] Write integration tests for US2 in `app/tests/integration/test_info.py` — starts service, hits `/info` from localhost (RFC1918), validates all three `ServiceMetadata` fields present and non-empty, validates schema matches `contracts/api.yaml` (depends on T015, T016, T017)
+- [x] T016 [P] [US2] Write unit tests for `network_guard.py` in `app/tests/unit/test_network_guard.py` — RFC1918 source IPs (10.x, 172.16.x, 192.168.x) are allowed; public IPs (1.2.3.4, 8.8.8.8) raise 403; edge cases: loopback 127.0.0.1 allowed
+- [x] T017 [P] [US2] Write unit tests for `/info` endpoint in `app/tests/unit/test_info.py` — returns 200 with correct `version`/`environment`/`build_id` from config; non-internal caller receives 403
+- [x] T018 [US2] Write integration tests for US2 in `app/tests/integration/test_info.py` — starts service, hits `/info` from localhost (RFC1918), validates all three `ServiceMetadata` fields present and non-empty, validates schema matches `contracts/api.yaml` (depends on T015, T016, T017)
 
 **Checkpoint**: User Story 2 complete. Operators can identify running version/build. SC-002 and SC-004 verifiable.
 
