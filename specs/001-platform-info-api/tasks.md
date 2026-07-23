@@ -135,7 +135,7 @@
 
 **Purpose**: End-to-end validation that all success criteria are met, pre-commit passes cleanly, and PROGRESS.md reflects the final state.
 
-- [ ] T030 [P] Run `pre-commit run --all-files` on the full repo and resolve any findings — ensures black/ruff/bandit/detect-secrets/hadolint all pass before PR
+- [x] T030 [P] Run `pre-commit run --all-files` on the full repo and resolve any findings — ensures black/ruff/bandit/detect-secrets/hadolint all pass before PR
 - [ ] T031 Execute the full `quickstart.md` validation end-to-end on a running k3d cluster: SC-001 (health < 1s), SC-002 (100% unauthorized internal requests refused), SC-003 (metrics collectible on every scrape), SC-004 (version/build identifiable from `/info` alone)
 - [ ] T032 [P] Update `PROGRESS.md` — mark `001-platform-info-api` complete, advance SDD checklist to next phase, document any deferred items
 

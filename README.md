@@ -66,7 +66,7 @@ pre-commit hooks → lint → SAST → SCA → unit tests → docker build → t
 
 ## Developer setup
 
-**Prerequisites**: Python 3.13, pip, Docker (for hadolint hook and local container testing).
+**Prerequisites**: Python 3.13, pip, [hadolint](https://github.com/hadolint/hadolint) binary on PATH (Dockerfile lint hook), Docker (for local container testing).
 
 ```
 # 1. Install pre-commit
@@ -86,7 +86,7 @@ cd app
 pytest
 ```
 
-Note: the `hadolint-docker` pre-commit hook requires Docker to be running. If Docker is not available, the hook will fail on Dockerfile linting only — all other hooks run independently.
+Note: on Windows, install hadolint via `winget install hadolint.hadolint` (or download the binary and add it to PATH) so the pre-commit hook can find it.
 
 ## Project principles
 
