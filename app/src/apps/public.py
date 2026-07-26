@@ -36,7 +36,9 @@ async def _record_metrics(request: Request, call_next: object) -> object:
     http_requests_total.labels(method=method, path=path, status=status_code).inc()
     http_request_duration_seconds.labels(method=method, path=path).observe(duration)
     if response.status_code >= 500:
-        http_requests_errors_total.labels(method=method, path=path, status=status_code).inc()
+        http_requests_errors_total.labels(
+            method=method, path=path, status=status_code
+        ).inc()
 
     return response
 

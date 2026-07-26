@@ -10,14 +10,14 @@ from src.apps.public import app as public_app
 async def serve() -> None:
     public_config = uvicorn.Config(
         public_app,
-        host="0.0.0.0",
+        host="0.0.0.0",  # nosec B104 — intentional: container network is the security boundary
         port=8080,
         log_level="info",
         access_log=True,
     )
     internal_config = uvicorn.Config(
         internal_app,
-        host="0.0.0.0",
+        host="0.0.0.0",  # nosec B104 — intentional: container network is the security boundary
         port=9090,
         log_level="info",
         access_log=True,
