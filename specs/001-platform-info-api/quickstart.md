@@ -10,10 +10,16 @@ Validation guide for the feature once implemented. Not implementation instructio
 ## Run locally (no cluster)
 
 ```bash
-uvicorn app.src.main:app --host 0.0.0.0
+cd app
+python -m venv .venv          # create isolated environment (first time only)
+source .venv/bin/activate     # activate it (use .venv\Scripts\activate on Windows)
+pip install -r requirements.txt
+python -m src.main
 ```
 
-The entrypoint starts both ASGI servers (public :8080, internal :9090) in one process — see `research.md` for why.
+> **Tip**: always use a virtual environment (`venv`) to avoid polluting your system Python with project dependencies. The `.venv/` directory is gitignored.
+
+The entrypoint starts both ASGI servers (public :8080, internal :9090) in one process — see `research.md` for why. Run from `app/` so that `src.*` imports resolve correctly.
 
 ## Validate the public port (User Story 1)
 
