@@ -5,7 +5,26 @@ Validation guide for the feature once implemented. Not implementation instructio
 ## Prerequisites
 
 - Python 3.13 and the dependencies in `app/requirements.txt` installed, OR the built Docker image.
-- For the NetworkPolicy portion: a running k3d cluster with the service deployed per `k8s/base/`.
+- For the NetworkPolicy portion: a running k3d cluster with ArgoCD installed — see [Local Kubernetes cluster](../../README.md#local-kubernetes-cluster) in the root README for one-time setup.
+
+## Deploy this feature to the cluster
+
+Once the cluster + ArgoCD exist ([root README](../../README.md#local-kubernetes-cluster)), build/push this image and deploy it:
+
+```bash
+docker build -t k3d-registry.localhost:5050/platform-info-api:latest app/
+docker push k3d-registry.localhost:5050/platform-info-api:latest
+kubectl apply -f k8s/argocd/platform-info-app.yaml
+kubectl -n default get pods -w
+```
+
+ArgoCD reconciles `k8s/overlays/local` automatically (`selfHeal: true`, `prune: true`). Once pods are `Running`, port-forward to reach the service:
+
+```bash
+kubectl port-forward svc/platform-info-public 8080:8080
+```
+
+Now the endpoints below are reachable at `localhost:8080` for the public port. For the internal port (`9090`), port-forward the internal Service instead and treat it as originating from inside the cluster.
 
 ## Run locally (no cluster)
 

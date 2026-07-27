@@ -88,6 +88,56 @@ pytest
 
 Note: on Windows, install hadolint via `winget install hadolint.hadolint` (or download the binary and add it to PATH) so the pre-commit hook can find it.
 
+## Local Kubernetes cluster
+
+One-time setup for any feature that needs a running cluster (GitOps deploy, NetworkPolicy validation, etc). Docker must already be running.
+
+### 1. Install k3d
+
+**Windows** (winget):
+```powershell
+winget install k3d.k3d
+```
+
+**macOS** (Homebrew):
+```bash
+brew install k3d
+```
+
+**Linux**:
+```bash
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
+
+Verify: `k3d version`
+
+### 2. Create cluster + local registry
+
+```bash
+k3d registry create registry.localhost --port 5050
+k3d cluster create platform-lab --registry-use k3d-registry.localhost:5050 -p "8080:80@loadbalancer"
+kubectl cluster-info
+```
+
+The registry name (`k3d-registry.localhost:5050`) must match the image reference used by each feature's Kustomize overlay (e.g., `k8s/overlays/local/kustomization.yaml`).
+
+### 3. Install ArgoCD
+
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n argocd rollout status deployment/argocd-server
+```
+
+### Tear down
+
+```bash
+k3d cluster delete platform-lab
+k3d registry delete registry.localhost
+```
+
+Feature-specific deploy steps (building/pushing that feature's image, applying its ArgoCD `Application`) live in each feature's `quickstart.md`.
+
 ## Project principles
 
 This project is governed by a [constitution](.specify/memory/constitution.md) with 8 non-negotiable principles, including:
