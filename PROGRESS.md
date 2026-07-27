@@ -39,6 +39,7 @@ Constitution is ratified (v1.0.0). Spec written for Platform Info API. Next: sur
 
 - Phase 2: Full observability stack — Prometheus (metrics) + Loki (logs) + Tempo (traces) + Grafana (visualization) + Alertmanager (alerts) — covers all 3 pillars: metrics, logs, traces. OpenTelemetry SDK instrumentation goes in the app at Phase 1 so traces are emitted when Tempo arrives.
 - Phase 2: Harbor as self-hosted container registry (replacing GHCR)
+- Phase 2: Dependency-Track to ingest the SBOM (`sbom.json`) generated per build — stores SBOMs across builds/time and continuously re-checks them against new CVE disclosures, closing the gap that CI-time Trivy scan and Trivy Operator (cluster-runtime) don't cover: CVEs disclosed after a build shipped. Raised 2026-07-27.
 - Phase 2: Split into app repo + gitops repo (ArgoCD watches separate repo)
 - Phase 3: Istio service mesh
 - Phase 3: Backstage developer portal
