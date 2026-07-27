@@ -21,7 +21,7 @@
 **Purpose**: Project directory structure, dependency manifest, developer tooling.
 
 - [x] T001 Create app/ directory tree: `app/src/apps/`, `app/src/core/`, `app/src/models/`, `app/tests/unit/`, `app/tests/integration/` with `__init__.py` stubs
-- [x] T002 Create `app/requirements.txt` with pinned versions: fastapi, uvicorn[standard], prometheus-client, pydantic-settings, httpx, pytest, pytest-cov, pytest-asyncio
+- [x] T002 Create `app/requirements.txt` with pinned versions: fastapi, uvicorn[standard], prometheus-client, pydantic-settings, httpx2, pytest, pytest-cov, pytest-asyncio
 - [x] T003 [P] Create `.pre-commit-config.yaml` with hooks: black (formatter), ruff (linter), bandit (SAST), detect-secrets (secret scanning), hadolint (Dockerfile linter)
 - [x] T004 [P] Initialize detect-secrets baseline at `.secrets.baseline` via `detect-secrets scan > .secrets.baseline`
 

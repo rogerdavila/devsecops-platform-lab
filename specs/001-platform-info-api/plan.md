@@ -18,7 +18,7 @@ A FastAPI microservice exposing Kubernetes-standard liveness/readiness on a publ
 
 **Storage**: N/A — no persistence. Confirmed out of scope in `/speckit-clarify` (2026-07-05).
 
-**Testing**: pytest + pytest-cov (per CLAUDE.md pipeline description), httpx (async test client for FastAPI).
+**Testing**: pytest + pytest-cov (per CLAUDE.md pipeline description), httpx2 (async test client for FastAPI).
 
 **Target Platform**: Linux container (Docker), deployed to a local k3d-managed Kubernetes cluster.
 

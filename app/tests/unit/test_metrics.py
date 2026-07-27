@@ -1,5 +1,5 @@
 import pytest
-from httpx import ASGITransport, AsyncClient
+from httpx2 import ASGITransport, AsyncClient
 from prometheus_client import generate_latest
 
 from src.apps.internal import app
