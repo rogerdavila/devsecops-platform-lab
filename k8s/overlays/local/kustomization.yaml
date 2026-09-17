@@ -6,7 +6,6 @@ resources:
 
 images:
   - name: ghcr.io/rogerdavila/platform-info-api
-    newName: k3d-registry.localhost:5050/platform-info-api
     newTag: latest
 
 patches:
