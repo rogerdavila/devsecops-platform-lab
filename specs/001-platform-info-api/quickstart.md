@@ -35,8 +35,10 @@ ArgoCD's `selfHeal: true` will revert this back to the git-declared GHCR image o
 Once pods are `Running` (either path), port-forward to reach the service:
 
 ```bash
-kubectl port-forward svc/platform-info-public 8080:8080
+kubectl port-forward svc/platform-info-public 18080:8080
 ```
+
+Use a local port other than `8080` (e.g. `18080` above) — `k3d cluster create` already binds host port `8080` to the cluster's Traefik load balancer (`-p "8080:80@loadbalancer"`). Curling `localhost:8080` hits Traefik, not this Service, and returns Traefik's own `404 page not found` (no `Ingress` is defined for this app) — easy to mistake for the app itself being broken.
 
 Now the endpoints below are reachable at `localhost:8080` for the public port. For the internal port (`9090`), port-forward the internal Service instead and treat it as originating from inside the cluster.
 
