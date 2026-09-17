@@ -35,6 +35,10 @@ Constitution is ratified (v1.0.0). Spec written for Platform Info API. Next: sur
 | `.gitignore` | Done |
 | `PROGRESS.md` | Done (this file) |
 
+## GitOps promotion gap (found 2026-09-17, closed same day)
+
+While preparing T031 (live cluster validation), found that `k8s/overlays/local` pointed at `k3d-registry.localhost` with the image tag pinned to `:latest` — a merge to `main` pushed a new image to GHCR but produced no git diff, so ArgoCD's automated sync never actually redeployed it. Fixed by adding a CI job that commits the build's commit SHA as the image tag into `k8s/overlays/local/kustomization.yaml` after every GHCR push on `main`, using the default `GITHUB_TOKEN` (no retrigger). The overlay now targets GHCR directly; `k3d-registry.localhost` is kept only as a manual, non-committed fast-iteration path for pre-merge testing. Full decision and alternatives considered in `specs/001-platform-info-api/research.md`. New tasks T033–T036 added to `tasks.md` (Phase 9), all complete.
+
 ## Backlog (future phases — do not add to current build)
 
 - Phase 2: Full observability stack — Prometheus (metrics) + Loki (logs) + Tempo (traces) + Grafana (visualization) + Alertmanager (alerts) — covers all 3 pillars: metrics, logs, traces. OpenTelemetry SDK instrumentation goes in the app at Phase 1 so traces are emitted when Tempo arrives.

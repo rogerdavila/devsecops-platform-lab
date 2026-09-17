@@ -52,8 +52,10 @@ Port 9090 is restricted by a Kubernetes `NetworkPolicy` — only Prometheus insi
 Every PR and push to `main` runs through:
 
 ```text
-pre-commit hooks → lint → SAST → SCA → unit tests → docker build → trivy image scan → SBOM → integration tests → push to GHCR
+pre-commit hooks → lint → SAST → SCA → unit tests → docker build → trivy image scan → SBOM → integration tests → push to GHCR → bump manifest tag (GitOps promotion)
 ```
+
+**GitOps promotion**: pushing a new image to GHCR alone does not trigger a deploy — ArgoCD reacts to diffs in this git repo, not to registry pushes. So after `push to GHCR` succeeds on `main`, a final job commits the build's commit SHA as the image tag into `k8s/overlays/local/kustomization.yaml`, using the default `GITHUB_TOKEN` (that commit does not retrigger CI). ArgoCD's automated sync then deploys the exact image the pipeline just scanned and published. See `specs/001-platform-info-api/research.md` for the full decision.
 
 **Security gates that block the pipeline:**
 
@@ -125,7 +127,7 @@ kubectl config use-context k3d-platform-lab
 kubectl cluster-info
 ```
 
-The registry name (`k3d-registry.localhost:5050`) must match the image reference used by each feature's Kustomize overlay (e.g., `k8s/overlays/local/kustomization.yaml`).
+This local registry is **not** part of the GitOps-managed deploy path — ArgoCD's `local` overlay deploys directly from GHCR, promoted automatically by CI (see [CI/CD pipeline](#cicd-pipeline)). The local registry exists only for fast, pre-merge iteration: build and push a throwaway image here, then `kubectl set image` the running Deployment to point at it. ArgoCD's `selfHeal: true` reverts that override back to the git-declared GHCR image on its next reconcile — see each feature's `quickstart.md` for the exact commands.
 
 ### 3. Install ArgoCD
 
