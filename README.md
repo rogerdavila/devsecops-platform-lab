@@ -116,6 +116,12 @@ Verify: `k3d version`
 ```bash
 k3d registry create registry.localhost --port 5050
 k3d cluster create platform-lab --registry-use k3d-registry.localhost:5050 -p "8080:80@loadbalancer"
+```
+
+`k3d cluster create` automatically merges the cluster's kubeconfig and switches the active `kubectl` context to `k3d-platform-lab`. If you work with multiple clusters and need to switch back to it later:
+
+```bash
+kubectl config use-context k3d-platform-lab
 kubectl cluster-info
 ```
 
@@ -128,6 +134,16 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl -n argocd rollout status deployment/argocd-server
 ```
+
+### Troubleshooting: `kubectl` can't reach the cluster on Windows
+
+If `kubectl cluster-info` times out with something like `dial tcp <ip>: connectex: ... failed to respond` pointing at `host.docker.internal`, Docker Desktop restarted and its internal IP changed, leaving a stale entry for `host.docker.internal` in the kubeconfig. Point the cluster entry at `127.0.0.1` instead (the API port is already published there):
+
+```powershell
+kubectl config set-cluster k3d-platform-lab --server=https://127.0.0.1:<api-port>
+```
+
+Find `<api-port>` from `docker ps` (the host port mapped to `6443/tcp` on `k3d-platform-lab-serverlb`).
 
 ### Tear down
 
