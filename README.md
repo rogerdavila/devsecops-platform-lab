@@ -131,9 +131,11 @@ The registry name (`k3d-registry.localhost:5050`) must match the image reference
 
 ```bash
 kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --server-side --force-conflicts
 kubectl -n argocd rollout status deployment/argocd-server
 ```
+
+`--server-side` is required here: a regular `kubectl apply` embeds the full manifest in the `kubectl.kubernetes.io/last-applied-configuration` annotation, and ArgoCD's `applicationsets.argoproj.io` CRD is large enough to blow past the 262144-byte annotation limit (`metadata.annotations: Too long`).
 
 ### Troubleshooting: `kubectl` can't reach the cluster on Windows
 
