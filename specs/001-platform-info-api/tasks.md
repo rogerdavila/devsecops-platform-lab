@@ -136,7 +136,7 @@
 **Purpose**: End-to-end validation that all success criteria are met, pre-commit passes cleanly, and PROGRESS.md reflects the final state.
 
 - [x] T030 [P] Run `pre-commit run --all-files` on the full repo and resolve any findings — ensures black/ruff/bandit/detect-secrets/hadolint all pass before PR
-- [ ] T031 Execute the full `quickstart.md` validation end-to-end on a running k3d cluster: SC-001 (health < 1s), SC-002 (100% unauthorized internal requests refused), SC-003 (metrics collectible on every scrape), SC-004 (version/build identifiable from `/info` alone)
+- [x] T031 Execute the full `quickstart.md` validation end-to-end on a running k3d cluster: SC-001 (health < 1s), SC-002 (100% unauthorized internal requests refused), SC-003 (metrics collectible on every scrape), SC-004 (version/build identifiable from `/info` alone) — validated 2026-09-17: `/health`/`/ready` 200 via port-forward; NetworkPolicy confirmed blocking a pod outside `monitoring` namespace on :9090; `/metrics` exposes all four metric families; `/info` returns version/environment/build_id; SIGTERM drain confirmed via pod logs showing coordinated graceful shutdown of both Uvicorn servers
 - [ ] T032 [P] Update `PROGRESS.md` — mark `001-platform-info-api` complete, advance SDD checklist to next phase, document any deferred items
 
 **Checkpoint**: Feature complete. All pipeline gates green. All success criteria verified. Deployed via GitOps.

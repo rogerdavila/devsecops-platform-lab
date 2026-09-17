@@ -4,9 +4,9 @@ Current state of the project. Update at the end of every work session.
 
 ## Current Phase
 
-**SDD Workflow — Step 3: `/speckit-clarify`**
+**001-platform-info-api: COMPLETE (2026-09-17)**
 
-Constitution is ratified (v1.0.0). Spec written for Platform Info API. Next: surface assumptions before planning.
+All 3 user stories implemented, CI/CD pipeline live, deployed to local k3d cluster via ArgoCD, and fully validated end-to-end (T031). Next feature not yet started — see Backlog below for candidates.
 
 ## SDD Checklist
 
@@ -16,7 +16,7 @@ Constitution is ratified (v1.0.0). Spec written for Platform Info API. Next: sur
 - [x] `/speckit-clarify` — surface assumptions (2026-07-05)
 - [x] `/speckit-plan` — tech stack and architecture doc (2026-07-08)
 - [x] `/speckit-tasks` — ordered task breakdown (2026-07-13)
-- [ ] `/speckit-implement` — build phase ← **YOU ARE HERE**
+- [x] `/speckit-implement` — build phase (2026-07-13 → 2026-09-17, including Phase 9 GitOps promotion fix and live cluster validation)
 
 ## What exists so far
 
