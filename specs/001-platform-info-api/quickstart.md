@@ -9,16 +9,30 @@ Validation guide for the feature once implemented. Not implementation instructio
 
 ## Deploy this feature to the cluster
 
-Once the cluster + ArgoCD exist ([root README](../../README.md#local-kubernetes-cluster)), build/push this image and deploy it:
+Once the cluster + ArgoCD exist ([root README](../../README.md#local-kubernetes-cluster)), register the Application once:
 
 ```bash
-docker build -t k3d-registry.localhost:5050/platform-info-api:latest app/
-docker push k3d-registry.localhost:5050/platform-info-api:latest
 kubectl apply -f k8s/argocd/platform-info-app.yaml
 kubectl -n default get pods -w
 ```
 
-ArgoCD reconciles `k8s/overlays/local` automatically (`selfHeal: true`, `prune: true`). Once pods are `Running`, port-forward to reach the service:
+### The real flow: GitOps-managed deploy
+
+`k8s/overlays/local/kustomization.yaml` points at `ghcr.io/rogerdavila/platform-info-api`. Every push to `main` runs the full CI pipeline (lint → SAST → SCA → tests → build → scan → SBOM → integration tests → push to GHCR), then a final job commits the build's commit SHA as the image tag into that overlay file directly. ArgoCD (`automated` sync, `selfHeal: true`, `prune: true`) picks up that git diff and redeploys the exact image the pipeline just scanned and published — no manual `docker push` or `kubectl apply` needed after the one-time Application registration above. See `research.md` ("CI commits the image tag bump") for why this is necessary — ArgoCD reacts to git diffs, not registry pushes.
+
+### Fast local iteration (before merging, skips CI)
+
+To test a change against the cluster before it reaches `main` — e.g. verifying a NetworkPolicy tweak — push a throwaway build to the local k3d registry and point the running Deployment at it manually. This is a temporary, non-committed override, not a deployment path:
+
+```bash
+docker build -t k3d-registry.localhost:5050/platform-info-api:dev app/
+docker push k3d-registry.localhost:5050/platform-info-api:dev
+kubectl -n default set image deployment/platform-info-api api=k3d-registry.localhost:5050/platform-info-api:dev
+```
+
+ArgoCD's `selfHeal: true` will revert this back to the git-declared GHCR image on its next reconcile — that's expected, not a bug.
+
+Once pods are `Running` (either path), port-forward to reach the service:
 
 ```bash
 kubectl port-forward svc/platform-info-public 8080:8080

@@ -10,6 +10,8 @@
 
 A FastAPI microservice exposing Kubernetes-standard liveness/readiness on a public port (8080) and service metadata/Prometheus metrics on an internal-only port (9090). The internal port is protected by defense-in-depth: a Kubernetes NetworkPolicy at the network layer, plus an application-level private-network check (clarified 2026-07-05). No external dependency exists yet — readiness reflects a minimal internal startup check, deliberately deferring real dependency wiring. The feature is complete only once it is built, containerized, scanned, and deployed to the local k3d cluster via ArgoCD (Constitution Principle III).
 
+**Update (2026-09-17)**: closed the GitOps promotion loop discovered while preparing T031 validation — CI now commits an image tag bump to `k8s/overlays/local/kustomization.yaml` after every GHCR push on `main`, so ArgoCD's automated sync actually deploys the artifact the pipeline just scanned and published, instead of silently no-op'ing on a pinned `:latest` tag. See `research.md` for the decision and alternatives considered.
+
 ## Technical Context
 
 **Language/Version**: Python 3.13 — latest stable CPython at time of writing; no legacy constraint exists in this greenfield project, so we take the current stable release.
@@ -97,7 +99,7 @@ k8s/
     └── local/                  # k3d-specific overlay
 
 .github/workflows/
-└── ci.yml                      # lint → SAST → SCA → tests → build → scan → SBOM → push
+└── ci.yml                      # lint → SAST → SCA → tests → build → scan → SBOM → push → bump manifest tag
 ```
 
 **Structure Decision**: Single microservice, two-port design implemented as two independent FastAPI apps (`apps/public.py`, `apps/internal.py`) served by two concurrent Uvicorn server instances from one process (see `research.md` for why this beats a single app with conditional routing). App code and Kubernetes manifests stay in the same monorepo per the current PROGRESS.md decision (splitting into app + gitops repos is an explicit Phase 2 backlog item, not now).

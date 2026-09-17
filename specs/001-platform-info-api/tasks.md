@@ -143,6 +143,19 @@
 
 ---
 
+## Phase 9: GitOps Promotion Gap (found while preparing T031)
+
+**Purpose**: `k8s/overlays/local` pointed at `k3d-registry.localhost` with the image tag pinned to `:latest`. Pushing a new image to GHCR produced no git diff, so ArgoCD's automated sync had nothing to reconcile — a merge to `main` never actually rolled out. Must close before T031 can validate a real end-to-end deploy. See `research.md` ("CI commits the image tag bump") for the decision and alternatives considered.
+
+- [x] T033 [P] Update `k8s/overlays/local/kustomization.yaml` — drop the `newName` override to `k3d-registry.localhost`; keep only `newTag`, so the overlay targets `ghcr.io/rogerdavila/platform-info-api` (the name already declared in `k8s/base/deployment.yaml`)
+- [x] T034 Add `update-manifest` job to `.github/workflows/ci.yml` — runs after `push` on `main` only; commits `${{ github.sha }}` as the new `newTag` in `k8s/overlays/local/kustomization.yaml` directly to `main` using the default `GITHUB_TOKEN` (does not retrigger CI); requires `permissions: contents: write` on the job
+- [x] T035 [P] Update `README.md` — document the GitOps-managed deploy path (CI → GHCR → manifest tag bump → ArgoCD sync) and the separate, manual `k3d-registry.localhost` fast-iteration path for pre-merge testing (reverted automatically by `selfHeal`)
+- [x] T036 [P] Update `PROGRESS.md` — record the GitOps promotion decision and that Phase 9 closes before T031 execution
+
+**Checkpoint**: A merge to `main` results in ArgoCD actually deploying the newly published image, with no manual step. T031 can now validate a real GitOps-driven deploy.
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
