@@ -6,7 +6,7 @@ resources:
 
 images:
   - name: ghcr.io/rogerdavila/platform-info-api
-    newTag: 67da6e182be582985866ff8875902ccae44e0082
+    newTag: 3f19c24b5490f8c157846a2f1071ab961733c413
 
 patches:
   - patch: |-
