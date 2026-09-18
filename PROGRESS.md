@@ -42,10 +42,11 @@ While preparing T031 (live cluster validation), found that `k8s/overlays/local` 
 ## Backlog (future phases — do not add to current build)
 
 - Phase 2: Full observability stack — Prometheus (metrics) + Loki (logs) + Tempo (traces) + Grafana (visualization) + Alertmanager (alerts) — covers all 3 pillars: metrics, logs, traces. OpenTelemetry SDK instrumentation goes in the app at Phase 1 so traces are emitted when Tempo arrives.
-- Phase 2: Harbor as self-hosted container registry (replacing GHCR)
 - Phase 2: Dependency-Track to ingest the SBOM (`sbom.json`) generated per build — stores SBOMs across builds/time and continuously re-checks them against new CVE disclosures, closing the gap that CI-time Trivy scan and Trivy Operator (cluster-runtime) don't cover: CVEs disclosed after a build shipped. Raised 2026-07-27.
 - Phase 2: Split into app repo + gitops repo (ArgoCD watches separate repo)
 - Phase 3: Istio service mesh
-- Phase 3: Backstage developer portal
+- Phase 3: Backstage developer portal — kept for the classic, market-standard IDP pattern (still what most job postings ask for). Raised/scoped 2026-09-18.
 - Phase 3: LocalStack / cloud simulator for AWS service integration tests
+- Phase 3 (watch, not committed): "agent as the IDP" pattern — reframed 2026-09-18 after reading InfoQ's "Platform Artificial Intelligence" (Viktor Farcic: "Agents are the next revolution of platforms... before it was Backstage, now it's agents"). This is NOT a tool to adopt (Port/Cortex/OpsLevel are commercial-SaaS AI features bolted onto a catalog, not this) — the actual pattern is an agent with semantic search over git/PRs/Slack/Jira/wikis, grounded in OpenTelemetry traces, metrics, and logs, acting as the developer-facing interface instead of a portal. Notably, this project's own Phase 2 observability stack (Prometheus/Loki/Tempo/Grafana + OTel) is exactly the substrate that pattern needs — not a separate IDP, infrastructure an agent would consume. Revisit once Phase 2 observability is live and Backstage (classic pattern) is in place, to evaluate wiring an agent on top rather than picking a vendor.
 - Phase 4: Agentic AI security triage — an AI agent that consumes the artifacts the pipeline already produces (Trivy reports, SBOM, Semgrep findings) and summarizes/prioritizes them. Depends on Phase 1-3 being stable first (needs real pipeline output to read). Raised 2026-07-05.
+- Phase 5: Harbor as self-hosted container registry (replacing GHCR) — deprioritized 2026-09-18: GHCR already covers the "real registry" pattern for this lab, and Harbor isn't commonly asked for in the market, so it's low-value to learn right now relative to other backlog items.
