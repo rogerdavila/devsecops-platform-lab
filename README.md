@@ -139,6 +139,22 @@ kubectl -n argocd rollout status deployment/argocd-server
 
 `--server-side` is required here: a regular `kubectl apply` embeds the full manifest in the `kubectl.kubernetes.io/last-applied-configuration` annotation, and ArgoCD's `applicationsets.argoproj.io` CRD is large enough to blow past the 262144-byte annotation limit (`metadata.annotations: Too long`).
 
+### 4. Install Trivy Operator
+
+Required by the constitution (Principles I & II, Quality Gates table) — CI-time Trivy scanning only catches CVEs known at build time; Trivy Operator continuously rescans running workloads for CVEs disclosed after deployment.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/trivy-operator/main/deploy/static/trivy-operator.yaml --server-side --force-conflicts
+kubectl -n trivy-system rollout status deployment/trivy-operator
+```
+
+It discovers every workload in the cluster and schedules a scan Job per workload — with several workloads already running (ArgoCD, Traefik, CoreDNS, this app), the first full pass takes a few minutes. Check results with:
+
+```bash
+kubectl get vulnerabilityreports -A
+kubectl -n default get vulnerabilityreport -o jsonpath='{.items[0].report.summary}'
+```
+
 ### Troubleshooting: `kubectl` can't reach the cluster on Windows
 
 If `kubectl cluster-info` times out with something like `dial tcp <ip>: connectex: ... failed to respond` pointing at `host.docker.internal`, Docker Desktop restarted and its internal IP changed, leaving a stale entry for `host.docker.internal` in the kubeconfig. Point the cluster entry at `127.0.0.1` instead (the API port is already published there):
